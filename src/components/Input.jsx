@@ -24,12 +24,10 @@ const Input = () => {
   const handleSend = async () => {
     if (img) {
       const storageRef = ref(storage, uuid());
-
       const uploadTask = uploadBytesResumable(storageRef, img);
-
       uploadTask.on(
         (error) => {
-          //TODO:Handle Error
+          console.log(error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
@@ -80,7 +78,8 @@ const Input = () => {
         placeholder="Type something..."
         onChange={(e) => setText(e.target.value)}
         value={text}
-      />
+        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+        />
       <div className="send">
         <img src={Attach} alt="" />
         <input
@@ -88,6 +87,7 @@ const Input = () => {
           style={{ display: "none" }}
           id="file"
           onChange={(e) => setImg(e.target.files[0])}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
         <label htmlFor="file">
           <img src={Img} alt="" />
