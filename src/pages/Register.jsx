@@ -32,7 +32,7 @@ const Register = () => {
           try {
             //Update profile
             await updateProfile(res.user, {
-              name,
+              displayName: name,
               photoURL: downloadURL,
             });
             //create user on firestore
@@ -44,9 +44,8 @@ const Register = () => {
             });
 
             //create empty user chats on firestore
-            console.log();
             await setDoc(doc(db, "userChats", res.user.uid), {});
-            navigate("/");
+            navigate("/login");
           } catch (err) {
             console.log(err);
             setErr(true);
