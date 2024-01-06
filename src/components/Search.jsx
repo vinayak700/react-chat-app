@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 // import myimg from '../images/myimg.jpg';
 import {
   collection,
@@ -17,6 +17,7 @@ import { AuthContext } from "../context/AuthContext";
 const Search = () => {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
   const [err, setErr] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
@@ -34,11 +35,29 @@ const Search = () => {
     }
   };
 
+  useEffect(() => {
+    // Fetch all users initially
+    fetchContacts();
+  }, []);
+
+  const fetchContacts = async () => {
+    try {
+      const usersQuery = await getDocs(collection(db, "users"));
+      const usersData = usersQuery.docs.map((doc) => doc.data());
+      const newUsersData = usersData.filter(
+        (user) => user.uid !== currentUser.uid
+      );
+      setAllUsers(newUsersData);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
   const handleKey = (e) => {
     e.code === "Enter" && handleSearch();
   };
 
-  const handleSelect = async () => {
+  const handleSelect = async (user) => {
     const combinedId =
       currentUser.uid > user.uid
         ? currentUser.uid + user.uid
@@ -93,13 +112,29 @@ const Search = () => {
       </div>
       {err && <span>User not found!</span>}
       {user && (
-        <div className="userChat" onClick={handleSelect}>
+        <div className="userChat" onClick={() => handleSelect(user)}>
           <img src={user.photoURL} alt="myimg" />
           <div className="userChatInfo">
             <span>{user.name}</span>
           </div>
         </div>
       )}
+
+      <h3>All Users</h3>
+      {/* {console.log(allUsers)} */}
+      {allUsers &&
+        allUsers.map((user) => (
+          <div
+            className="userChat"
+            onClick={() => handleSelect(user)}
+            key={user.uid}
+          >
+            <img src={user.photoURL} alt="myimg" />
+            <div className="userChatInfo">
+              <span>{user.name}</span>
+            </div>
+          </div>
+        ))}
     </div>
   );
 };
