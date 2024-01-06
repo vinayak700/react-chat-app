@@ -38,7 +38,7 @@ const Search = () => {
   useEffect(() => {
     // Fetch all users initially
     fetchContacts();
-  }, []);
+  }, [fetchContacts]);
 
   const fetchContacts = async () => {
     try {
