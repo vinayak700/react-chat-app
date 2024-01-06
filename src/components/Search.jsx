@@ -43,11 +43,10 @@ const Search = () => {
         (user) => user.uid !== currentUser.uid
       );
       setAllUsers(newUsersData);
-      console.log(newUsersData);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
-  }, [setAllUsers]);
+  }, [setAllUsers, currentUser.uid]);
 
   useEffect(() => {
     // Fetch all users initially
