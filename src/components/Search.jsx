@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 // import myimg from '../images/myimg.jpg';
 import {
   collection,
@@ -35,23 +35,20 @@ const Search = () => {
     }
   };
 
-  useEffect(() => {
-    // Fetch all users initially
-    fetchContacts();
-  }, [allUsers]);
-
-  const fetchContacts = async () => {
+  const fetchContacts = useCallback(async () => {
     try {
       const usersQuery = await getDocs(collection(db, "users"));
       const usersData = usersQuery.docs.map((doc) => doc.data());
-      const newUsersData = usersData.filter(
-        (user) => user.uid !== currentUser.uid
-      );
-      setAllUsers(newUsersData);
+      setAllUsers(usersData);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
-  };
+  }, [setAllUsers]);
+
+  useEffect(() => {
+    // Fetch all users initially
+    fetchContacts();
+  }, [fetchContacts]);
 
   const handleKey = (e) => {
     e.code === "Enter" && handleSearch();
