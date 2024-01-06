@@ -39,7 +39,11 @@ const Search = () => {
     try {
       const usersQuery = await getDocs(collection(db, "users"));
       const usersData = usersQuery.docs.map((doc) => doc.data());
-      setAllUsers(usersData);
+      const newUsersData = usersData.filter(
+        (user) => user.uid !== currentUser.uid
+      );
+      setAllUsers(newUsersData);
+      console.log(newUsersData);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
