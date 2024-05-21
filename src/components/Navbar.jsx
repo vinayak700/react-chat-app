@@ -9,8 +9,8 @@ const Navbar = () => {
     <div className="navbar">
       <span className="logo">Echo Chat</span>
       <div className="user">
-        <img src={currentUser.photoURL} alt="myimg" />
-        <span>{currentUser.name}</span>
+        <img src={currentUser?.photoURL} alt="myimg" />
+        <span>{currentUser?.name}</span>
         <button
           onClick={() => signOut(auth)}
           style={{
